@@ -299,8 +299,15 @@ class NearNeighbors(object):
     def _get_image(frac_coords):
         """Private convenience method for get_nn_info,
         gives lattice image from provided PeriodicSite."""
-        return [int(f) if f >= 0 else int(f - 1)
-                for f in frac_coords]
+        images = [0,0,0]
+        for j, f in enumerate(frac_coords):
+            if f >= 0:
+                images[j] = int(f)
+            else:
+                images[j] = int(f - 1)
+                if f % 1 == 0:
+                    images[j] += 1
+        return images
 
     @staticmethod
     def _get_original_site(structure, site):
@@ -677,7 +684,7 @@ class MinimumVIRENN(NearNeighbors):
                 siw.append({'site': s,
                             'image': self._get_image(s.frac_coords),
                             'weight': w,
-                            'site_index': self._get_original_site(structure, s)})
+                            'site_index': self._get_original_site(vire.structure, s)})
 
         return siw
 
@@ -1496,7 +1503,8 @@ class LocalStructOrderParas(object):
 
         """
         Returns list of floats that represents
-        the parameters associated with calculation of the order
+        the parameters associated
+        with calculation of the order
         parameter that was defined at the index provided.
         Attention: the parameters do not need to equal those originally
         inputted because of processing out of efficiency reasons.
