@@ -566,12 +566,17 @@ class Element(Enum):
         L_symbols = 'SPDFGHIKLMNOQRTUVWXYZ'
         valence = []
         full_electron_config = self.full_electronic_structure
-        for _, l_symbol, ne in full_electron_config[::-1]:
+        for n, l_symbol, ne in full_electron_config[::-1]:
             l = L_symbols.lower().index(l_symbol)
             if ne < (2 * l + 1) * 2:
-                valence.append((l, ne))
+                valence.append((n, l, ne))
+
         if len(valence) > 1:
             raise ValueError("Ambiguous valence")
+
+        if not valence:
+            # Full shell
+            return 0, 0, 0
 
         return valence[0]
 
@@ -586,7 +591,7 @@ class Element(Enum):
         """
         L_symbols = 'SPDFGHIKLMNOQRTUVWXYZ'
 
-        L, v_e = self.valence
+        _, L, v_e = self.valence
 
         # for one electron in subshell L
         ml = list(range(-L, L + 1))

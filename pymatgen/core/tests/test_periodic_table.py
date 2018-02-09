@@ -88,7 +88,8 @@ class ElementTestCase(PymatgenTest):
                              ['2D1.5', '2D2.5'],
                              ['2D1.5', '2D2.5'],
                              ['2P0.5', '2P1.5'],
-                             ['4S1.5']] # f3
+                             ['4S1.5']], # f3
+                    "Yb": [['1S0']] # f14 full shell
                     }
         for k,v in testsets.items():
             self.assertEqual(Element(k).term_symbols, v)
